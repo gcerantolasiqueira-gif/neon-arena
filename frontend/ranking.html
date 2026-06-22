@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking | Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body class="neon-page arena-lobby-screen">
+<header class="topbar arena-topbar">
+    <div class="logo">NEON ARENA</div>
+    <nav class="arena-nav">
+        <a href="index.html">Início</a>
+        <a href="air-hockey.html">Air Hockey</a>
+        <a href="historico.html">Histórico</a>
+        <a href="como-funciona.html">Como funciona</a>
+        <button onclick="NeonCommon.abrirChat()">Chat</button>
+    </nav>
+    <div class="top-account" id="topAccount">
+        <div class="online-chip"><strong id="onlinePlayers">0</strong> online</div>
+        <button class="top-bonus" onclick="NeonCommon.receberBonusMoedas()">Receber moedas</button>
+        <strong id="topPlayerName">Visitante</strong>
+        <span id="topWallet">0 Moedas</span>
+    </div>
+</header>
+
+<main class="info-page-shell">
+    <section class="info-hero ranking-hero">
+        <div>
+            <div class="badge">Ranking Neon</div>
+            <h1>Os nomes mais fortes da arena</h1>
+            <p>Ranking por vitórias, partidas jogadas e aproveitamento.</p>
+        </div>
+        <div class="rank-podium">
+            <div><span>2</span><strong id="rankSecond">--</strong></div>
+            <div class="champion"><span>1</span><strong id="rankFirst">--</strong></div>
+            <div><span>3</span><strong id="rankThird">--</strong></div>
+        </div>
+    </section>
+
+    <section class="ranking-board" id="rankingBoard"></section>
+</main>
+
+<aside class="chat-panel" id="chatPanel" style="display:none;">
+    <div class="chat-header"><div><strong>Chat da Arena</strong><span>Combine sua próxima partida.</span></div><button onclick="NeonCommon.fecharChat()">Fechar</button></div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" onsubmit="NeonCommon.enviarChat(event)"><input id="chatInput" type="text" maxlength="240" placeholder="Digite sua mensagem"><button>Enviar</button></form>
+</aside>
+
+<script src="neon-common.js?v=1.5.2"></script>
+<script>
+    async function carregarRanking() {
+        const board = document.getElementById("rankingBoard");
+        const resposta = await fetch("/api/ranking-global").catch(() => null);
+        if (!resposta) {
+            board.innerHTML = "<p class='empty-history'>Ranking indisponível.</p>";
+            return;
+        }
+
+        const dados = await resposta.json();
+        const ranking = dados.ranking || [];
+        document.getElementById("rankFirst").innerText = ranking[0]?.nome || "--";
+        document.getElementById("rankSecond").innerText = ranking[1]?.nome || "--";
+        document.getElementById("rankThird").innerText = ranking[2]?.nome || "--";
+
+        if (!ranking.length) {
+            board.innerHTML = "<p class='empty-history'>Nenhuma partida registrada ainda.</p>";
+            return;
+        }
+
+        board.innerHTML = ranking.map((jogador, index) => `
+            <div class="ranking-line ${index < 3 ? "top-rank" : ""}">
+                <span>${index + 1}</span>
+                <strong>${jogador.nome}</strong>
+                <em>${jogador.vitorias || 0}V / ${jogador.derrotas || 0}D</em>
+                <b>${jogador.aproveitamento}%</b>
+            </div>
+        `).join("");
+    }
+
+    NeonCommon.init();
+    carregarRanking();
+</script>
+</body>
+</html>

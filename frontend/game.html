@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Partida | Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body>
+
+    <header class="topbar">
+        <div class="logo">⚡ NEON ARENA</div>
+        <nav>
+            <a href="index.html">Início</a>
+            <a href="air-hockey.html">Air Hockey</a>
+            <a href="ranking.html">Ranking</a>
+            <a href="historico.html">Histórico</a>
+            <a href="como-funciona.html">Como funciona</a>
+        </nav>
+    </header>
+
+    <main class="match-page">
+
+        <section class="match-header">
+
+            <div>
+                <span class="badge">Air Hockey Beta v1.0</span>
+                <h1>Partida em andamento</h1>
+            </div>
+
+            <div class="match-info">
+                <div>
+                    <span>Sala</span>
+                    <strong id="roomCode">----</strong>
+                </div>
+                <div>
+                    <span>Modo</span>
+                    <strong id="matchMode">1x1</strong>
+                </div>
+                <div>
+                    <span>Status</span>
+                    <strong id="connectionStatus">Local</strong>
+                </div>
+            </div>
+
+        </section>
+
+        <section class="scoreboard">
+
+            <div class="player-score red-side">
+                <span id="playerNameP1">Jogador 1</span>
+                <strong id="scoreP1">0</strong>
+            </div>
+
+            <div class="versus">VS</div>
+
+            <div class="player-score blue-side">
+                <span id="playerNameP2">Jogador 2</span>
+                <strong id="scoreP2">0</strong>
+            </div>
+
+        </section>
+
+        <canvas id="gameCanvas" width="1100" height="560"></canvas>
+
+        <section class="match-actions">
+            <button class="secondary-button" onclick="voltarLobby()">
+                Sair da partida
+            </button>
+
+            <button class="audio-button" id="audioButton" onclick="alternarAudio()">
+                Som: ligado
+            </button>
+
+            <button class="audio-button" id="musicButton" onclick="alternarMusica()">
+                Música: ligada
+            </button>
+
+            <button class="primary-button" onclick="resetarJogo()">
+                Novo jogo
+            </button>
+        </section>
+
+        <p class="controls-text" id="controlsText">
+            Jogador 1: W A S D &nbsp;&nbsp; | &nbsp;&nbsp; Jogador 2: Setas do teclado
+        </p>
+
+        <section class="post-match-panel" id="postMatchPanel" style="display:none;">
+            <div>
+                <span class="badge">Resultado</span>
+                <h2 id="postMatchTitle">Partida encerrada</h2>
+                <p id="postMatchSubtitle">Placar final</p>
+            </div>
+
+            <div class="post-match-score">
+                <div>
+                    <span id="postNameP1">Jogador 1</span>
+                    <strong id="postScoreP1">0</strong>
+                </div>
+
+                <div class="post-match-versus">VS</div>
+
+                <div>
+                    <span id="postNameP2">Jogador 2</span>
+                    <strong id="postScoreP2">0</strong>
+                </div>
+            </div>
+
+            <div class="post-match-actions">
+                <button class="primary-button" onclick="resetarJogo()">
+                    Novo jogo
+                </button>
+
+                <button class="secondary-button" onclick="voltarLobby()">
+                    Sair da partida
+                </button>
+
+                <button class="audio-button" onclick="alternarAudio()">
+                    Som ligado/desligado
+                </button>
+
+                <button class="audio-button" onclick="alternarMusica()">
+                    Música ligada/desligada
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="game.js?v=1.5.2"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Como funciona | Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body class="neon-page arena-lobby-screen">
+<header class="topbar arena-topbar">
+    <div class="logo">NEON ARENA</div>
+    <nav class="arena-nav">
+        <a href="index.html">Início</a>
+        <a href="air-hockey.html">Air Hockey</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="historico.html">Histórico</a>
+        <button onclick="NeonCommon.abrirChat()">Chat</button>
+    </nav>
+    <div class="top-account" id="topAccount">
+        <div class="online-chip"><strong id="onlinePlayers">0</strong> online</div>
+        <button class="top-bonus" onclick="NeonCommon.receberBonusMoedas()">Receber moedas</button>
+        <strong id="topPlayerName">Visitante</strong>
+        <span id="topWallet">0 Moedas</span>
+    </div>
+</header>
+
+<main class="info-page-shell">
+    <section class="info-hero">
+        <div>
+            <div class="badge">Como funciona</div>
+            <h1>Entre, escolha a mesa e vença</h1>
+            <p>A Neon Arena começa com moeda fictícia para testes. O foco agora é estabilidade, fluxo e competição limpa.</p>
+            <div class="beta-notice compact">
+                Não existe dinheiro real nesta versão: sem depósito, saque, prêmio financeiro ou aposta real.
+            </div>
+        </div>
+    </section>
+
+    <section class="how-grid">
+        <div class="rule"><strong>1</strong><span>Crie sua conta com apelido, usuário e senha. O apelido aparece no jogo inteiro.</span></div>
+        <div class="rule"><strong>2</strong><span>Escolha uma mesa de 100 a 1000 Moedas Neon ou entre na mesa grátis.</span></div>
+        <div class="rule"><strong>3</strong><span>Use sala privada para jogar com um amigo por código ou link.</span></div>
+        <div class="rule"><strong>4</strong><span>Converse no chat para chamar jogadores e marcar partidas.</span></div>
+        <div class="rule"><strong>5</strong><span>Vence quem fizer 7 gols primeiro. Depois a partida salva o histórico da conta.</span></div>
+        <div class="rule"><strong>6</strong><span>Moedas atuais são fictícias e podem ser renovadas para testes.</span></div>
+        <div class="rule"><strong>7</strong><span>Se um jogador cair, a partida pode pausar ou voltar para espera até a conexão estabilizar.</span></div>
+        <div class="rule"><strong>8</strong><span>Use o chat com respeito. Mensagens repetidas podem ser bloqueadas temporariamente.</span></div>
+    </section>
+</main>
+
+<aside class="chat-panel" id="chatPanel" style="display:none;">
+    <div class="chat-header"><div><strong>Chat da Arena</strong><span>Combine sua próxima partida.</span></div><button onclick="NeonCommon.fecharChat()">Fechar</button></div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" onsubmit="NeonCommon.enviarChat(event)"><input id="chatInput" type="text" maxlength="240" placeholder="Digite sua mensagem"><button>Enviar</button></form>
+</aside>
+
+<script src="neon-common.js?v=1.5.2"></script>
+<script>
+    NeonCommon.init();
+</script>
+</body>
+</html>

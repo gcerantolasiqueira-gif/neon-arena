@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body class="home-screen neon-page">
+
+    <header class="topbar clean-topbar">
+        <div class="logo">NEON ARENA</div>
+
+        <nav class="home-simple-nav">
+            <a class="nav-button" href="como-funciona.html">Como funciona</a>
+        </nav>
+    </header>
+
+    <main class="home-shell">
+        <section class="home-copy">
+            <div class="badge">Competitivo 1x1</div>
+
+            <h1>Entre na arena. Escolha a mesa. Vença no reflexo.</h1>
+
+            <p>
+                Air Hockey online com salas privadas, mesas por Moedas Neon, ranking e partidas rápidas em tempo real.
+            </p>
+
+            <div class="beta-notice">
+                Beta de testes: Moedas Neon são fictícias, sem depósito, saque ou valor real.
+            </div>
+
+            <button class="primary-button home-main-button" onclick="NeonCommon.jogarAirHockey()">
+                Jogar Air Hockey
+            </button>
+        </section>
+
+        <section class="home-arena-visual">
+            <div class="home-arena-card">
+                <div class="home-arena-top">
+                    <span>Air Hockey</span>
+                    <strong>Online</strong>
+                </div>
+
+                <div class="arena-preview home-preview">
+                    <div class="goal left"></div>
+                    <div class="center-line"></div>
+                    <div class="player red"></div>
+                    <div class="player blue"></div>
+                    <div class="puck"></div>
+                    <div class="goal right"></div>
+                </div>
+
+                <div class="home-arena-bottom">
+                    <span>Mesas de 100 a 1000 Moedas Neon fictícias</span>
+                    <strong>Disponível agora</strong>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="auth-modal" id="authModal" style="display:none;">
+        <div class="auth-card">
+            <button class="drawer-close" onclick="NeonCommon.closeAuthModal()">Fechar</button>
+            <div class="badge">Conta Neon</div>
+            <h2>Entre para jogar</h2>
+            <p>Seu apelido aparece no placar, nos gols, na sala e nas vitórias.</p>
+
+            <div class="auth-grid">
+                <input id="loginApelido" type="text" maxlength="18" placeholder="Apelido">
+                <input id="loginUsuario" type="text" maxlength="24" placeholder="Nome de usuário">
+                <input id="loginSenha" type="password" maxlength="32" placeholder="Senha">
+            </div>
+
+            <div class="auth-actions">
+                <button class="primary-button" onclick="NeonCommon.entrarConta()">Entrar</button>
+                <button class="secondary-button" onclick="NeonCommon.cadastrarConta()">Criar conta</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="neon-common.js?v=1.5.2"></script>
+    <script>
+        NeonCommon.init();
+    </script>
+
+</body>
+
+</html>

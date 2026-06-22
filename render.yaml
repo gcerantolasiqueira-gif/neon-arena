@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: neon-arena
+    runtime: python
+    plan: starter
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: NEON_ENV
+        value: production
+      - key: NEON_DB_PATH
+        value: /var/data/neon_arena.db
+      - key: NEON_ALLOWED_HOSTS
+        value: "*"
+    disk:
+      name: neon-arena-data
+      mountPath: /var/data
+      sizeGB: 1
+

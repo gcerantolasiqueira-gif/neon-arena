@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+.env
+.env.*
+!.env.example
+backend/neon_arena.db
+backend/neon_arena.db-*
+data/
+.DS_Store
+Thumbs.db
+

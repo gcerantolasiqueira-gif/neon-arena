@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lobby Air Hockey | Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body class="arena-lobby-screen neon-page">
+
+<header class="topbar arena-topbar">
+    <div class="logo">NEON ARENA</div>
+
+    <nav class="arena-nav">
+        <a href="index.html">Início</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="historico.html">Histórico</a>
+        <a href="como-funciona.html">Como funciona</a>
+        <button onclick="NeonCommon.abrirChat()">Chat</button>
+    </nav>
+
+    <div class="top-account" id="topAccount">
+        <div class="online-chip"><strong id="onlinePlayers">0</strong> online</div>
+        <button class="top-bonus" onclick="NeonCommon.receberBonusMoedas()">Receber moedas</button>
+        <strong id="topPlayerName">Visitante</strong>
+        <span id="topWallet">0 Moedas</span>
+        <button class="profile-menu" onclick="NeonCommon.sairConta()">Sair</button>
+    </div>
+</header>
+
+<main class="arena-shell wide-lobby">
+    <section class="arena-main">
+        <div id="inicioSala">
+            <div class="arena-title-row lobby-title-row">
+                <div>
+                    <div class="badge">Air Hockey Online</div>
+                    <h1>Escolha sua mesa</h1>
+                    <p>Entre em uma fila por Moedas Neon, crie uma sala privada ou treine contra o robô.</p>
+                    <div class="beta-notice compact">
+                        Beta público: moedas fictícias para teste, sem depósito, saque ou valor real.
+                    </div>
+                </div>
+            </div>
+
+            <section class="stake-section">
+                <div class="section-heading">
+                    <h2>Mesas valendo Moedas Neon</h2>
+                    <span>Quanto maior a mesa, maior a disputa. Tudo fictício nesta fase beta.</span>
+                </div>
+
+                <div class="stake-grid expanded-stake-grid">
+                    <button class="stake-card free-card" onclick="procurarAdversario(0)">
+                        <strong>Grátis</strong>
+                        <span>Fila rápida</span>
+                        <small>Sem moedas</small>
+                    </button>
+
+                    <button class="stake-card" onclick="procurarAdversario(100)"><strong>100</strong><span>Moedas</span><small>Entrada: 100</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(200)"><strong>200</strong><span>Moedas</span><small>Entrada: 200</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(300)"><strong>300</strong><span>Moedas</span><small>Entrada: 300</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(400)"><strong>400</strong><span>Moedas</span><small>Entrada: 400</small></button>
+                    <button class="stake-card featured-stake" onclick="procurarAdversario(500)"><strong>500</strong><span>Moedas</span><small>Mesa destaque</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(600)"><strong>600</strong><span>Moedas</span><small>Entrada: 600</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(700)"><strong>700</strong><span>Moedas</span><small>Entrada: 700</small></button>
+                    <button class="stake-card" onclick="procurarAdversario(800)"><strong>800</strong><span>Moedas</span><small>Entrada: 800</small></button>
+                    <button class="stake-card high-stake" onclick="procurarAdversario(900)"><strong>900</strong><span>Moedas</span><small>Entrada: 900</small></button>
+                    <button class="stake-card high-stake" onclick="procurarAdversario(1000)"><strong>1000</strong><span>Moedas</span><small>Mesa máxima</small></button>
+                </div>
+            </section>
+
+            <section class="quick-play-grid lobby-tools">
+                <div class="quick-card">
+                    <div>
+                        <h2>Sala privada</h2>
+                        <p>Crie uma sala e envie o código para jogar com alguém específico.</p>
+                    </div>
+                    <div class="private-actions">
+                        <button class="primary-button" onclick="criarSala()">Criar sala privada</button>
+                        <div class="room-box">
+                            <input id="codigoEntrada" type="text" placeholder="Código da sala">
+                            <button onclick="entrarSala()">Entrar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="quick-card">
+                    <div>
+                        <h2>Jogar com robô</h2>
+                        <p>Treine reflexo e controle antes de entrar nas mesas online.</p>
+                    </div>
+                    <button class="secondary-button" onclick="alternarNiveisRobo()">Escolher nível</button>
+                    <div class="bot-levels" id="botLevels" style="display:none;">
+                        <button onclick="treinarRobo('facil')">Fácil</button>
+                        <button onclick="treinarRobo('medio')">Médio</button>
+                        <button onclick="treinarRobo('dificil')">Difícil</button>
+                        <button onclick="treinarRobo('insano')">Insano</button>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <div id="salaCriada" class="sala-box-card arena-wait-card" style="display:none;">
+            <div class="badge" id="salaBadge">Sala privada</div>
+            <h1 id="salaTitulo">Sala criada!</h1>
+            <p id="salaDescricao">Compartilhe este código com seu amigo:</p>
+            <div class="codigo-grande" id="codigoSala"></div>
+            <div class="wait-actions">
+                <button class="primary-button" onclick="copiarCodigo()">Copiar código</button>
+                <button class="primary-button" onclick="copiarLinkSala()">Copiar link da sala</button>
+            </div>
+            <div class="status-sala" id="statusSala">Aguardando adversário...</div>
+            <button class="secondary-button" onclick="cancelarSala()">Cancelar sala</button>
+        </div>
+    </section>
+</main>
+
+<aside class="chat-panel" id="chatPanel" style="display:none;">
+    <div class="chat-header">
+        <div>
+            <strong>Chat da Arena</strong>
+            <span>Combine uma partida ou chame alguém para uma mesa.</span>
+        </div>
+        <button onclick="NeonCommon.fecharChat()">Fechar</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" onsubmit="NeonCommon.enviarChat(event)">
+        <input id="chatInput" type="text" maxlength="240" placeholder="Digite sua mensagem">
+        <button>Enviar</button>
+    </form>
+</aside>
+
+<script src="neon-common.js?v=1.5.2"></script>
+<script>
+    let codigoAtual = null;
+    let intervaloStatus = null;
+    let jogadorAtual = 1;
+
+    function apelidoAtual() {
+        return localStorage.getItem("neonArenaNome") || "NeonPlayer";
+    }
+
+    function treinarRobo(nivel) {
+        window.location.href = "game.html?sala=TREINO&modo=bot&nivel=" + nivel;
+    }
+
+    function alternarNiveisRobo() {
+        const botLevels = document.getElementById("botLevels");
+        botLevels.style.display = botLevels.style.display === "none" ? "grid" : "none";
+    }
+
+    async function criarSala(aposta = 0) {
+        const resposta = await fetch("/api/criar-sala?aposta=" + aposta, {
+            headers: NeonCommon.token ? NeonCommon.authHeaders() : {}
+        });
+        const dados = await resposta.json();
+
+        if (!dados.sucesso) {
+            alert("Erro ao criar sala.");
+            return;
+        }
+
+        codigoAtual = dados.codigo;
+        jogadorAtual = 1;
+        abrirEspera("Sala privada", "Sala criada!", "Compartilhe este código com seu amigo:", "Aguardando adversário...");
+    }
+
+    async function procurarAdversario(aposta = 0) {
+        if (aposta > 0 && !NeonCommon.token) {
+            NeonCommon.openAuthModal();
+            return;
+        }
+
+        const resposta = await fetch("/api/procurar-partida?aposta=" + aposta, {
+            headers: NeonCommon.token ? NeonCommon.authHeaders() : {}
+        });
+        const dados = await resposta.json();
+
+        if (!dados.sucesso) {
+            alert(dados.mensagem || "Erro ao procurar adversário.");
+            return;
+        }
+
+        codigoAtual = dados.codigo;
+        jogadorAtual = dados.jogador;
+
+        if (dados.encontrou) {
+            window.location.href = "game.html?sala=" + codigoAtual + "&modo=online&jogador=2";
+            return;
+        }
+
+        const titulo = aposta > 0 ? "Mesa " + aposta + " Moedas" : "Mesa grátis";
+        abrirEspera(titulo, "Procurando adversário", "Você entrou na fila automática.", "Procurando adversário automaticamente...");
+    }
+
+    function abrirEspera(badge, titulo, descricao, status) {
+        document.getElementById("codigoSala").innerText = codigoAtual;
+        document.getElementById("salaBadge").innerText = badge;
+        document.getElementById("salaTitulo").innerText = titulo;
+        document.getElementById("salaDescricao").innerText = descricao;
+        document.getElementById("inicioSala").style.display = "none";
+        document.getElementById("salaCriada").style.display = "flex";
+        document.getElementById("statusSala").innerText = status;
+
+        verificarStatusSala();
+        intervaloStatus = setInterval(verificarStatusSala, 1200);
+    }
+
+    async function verificarStatusSala() {
+        if (!codigoAtual) return;
+
+        const resposta = await fetch("/api/status-sala/" + codigoAtual);
+        const dados = await resposta.json();
+
+        if (!dados.sucesso) {
+            document.getElementById("statusSala").innerText = "Sala não encontrada.";
+            return;
+        }
+
+        if (dados.status === "pronta" || dados.status === "jogando") {
+            document.getElementById("statusSala").innerText = "Adversário conectado. Iniciando partida...";
+            clearInterval(intervaloStatus);
+            setTimeout(() => {
+                window.location.href = "game.html?sala=" + codigoAtual + "&modo=online&jogador=" + jogadorAtual;
+            }, 900);
+        }
+    }
+
+    function copiarCodigo() {
+        navigator.clipboard.writeText(codigoAtual);
+        alert("Código copiado: " + codigoAtual);
+    }
+
+    function copiarLinkSala() {
+        const link = window.location.origin + "/air-hockey.html?entrar=" + codigoAtual;
+        navigator.clipboard.writeText(link);
+        alert("Link copiado: " + link);
+    }
+
+    async function cancelarSala() {
+        if (codigoAtual) {
+            await fetch("/api/cancelar-sala/" + codigoAtual).catch(() => {});
+        }
+
+        codigoAtual = null;
+        jogadorAtual = 1;
+
+        if (intervaloStatus) clearInterval(intervaloStatus);
+        document.getElementById("inicioSala").style.display = "block";
+        document.getElementById("salaCriada").style.display = "none";
+    }
+
+    async function entrarSala() {
+        const codigo = document.getElementById("codigoEntrada").value.trim();
+        if (!codigo) {
+            alert("Digite o código da sala.");
+            return;
+        }
+
+        const resposta = await fetch("/api/entrar-sala/" + codigo);
+        const dados = await resposta.json();
+
+        if (!dados.sucesso) {
+            alert(dados.mensagem);
+            return;
+        }
+
+        window.location.href = "game.html?sala=" + codigo + "&modo=online&jogador=2";
+    }
+
+    async function entrarPorLinkSeExistir() {
+        const params = new URLSearchParams(window.location.search);
+        const codigo = params.get("entrar");
+        if (!codigo) return;
+        document.getElementById("codigoEntrada").value = codigo;
+        await entrarSala();
+    }
+
+    NeonCommon.init({ requireAuth: true }).then(entrarPorLinkSeExistir);
+</script>
+
+</body>
+</html>

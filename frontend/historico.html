@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico | Neon Arena</title>
+    <link rel="stylesheet" href="style.css?v=1.5.2">
+</head>
+
+<body class="neon-page arena-lobby-screen">
+<header class="topbar arena-topbar">
+    <div class="logo">NEON ARENA</div>
+    <nav class="arena-nav">
+        <a href="index.html">Início</a>
+        <a href="air-hockey.html">Air Hockey</a>
+        <a href="ranking.html">Ranking</a>
+        <a href="como-funciona.html">Como funciona</a>
+        <button onclick="NeonCommon.abrirChat()">Chat</button>
+    </nav>
+    <div class="top-account" id="topAccount">
+        <div class="online-chip"><strong id="onlinePlayers">0</strong> online</div>
+        <button class="top-bonus" onclick="NeonCommon.receberBonusMoedas()">Receber moedas</button>
+        <strong id="topPlayerName">Visitante</strong>
+        <span id="topWallet">0 Moedas</span>
+    </div>
+</header>
+
+<main class="info-page-shell">
+    <section class="info-hero">
+        <div>
+            <div class="badge">Histórico</div>
+            <h1>Sua trilha na Neon Arena</h1>
+            <p>Partidas salvas na conta, resultados locais e movimentação de moedas.</p>
+        </div>
+    </section>
+
+    <section class="history-grid-page">
+        <div class="info-card">
+            <h2>Resumo da conta</h2>
+            <div class="history-summary">
+                <div><span>Partidas</span><strong id="histPartidas">0</strong></div>
+                <div><span>Vitórias</span><strong id="histVitorias">0</strong></div>
+                <div><span>Aproveitamento</span><strong id="histAproveitamento">0%</strong></div>
+            </div>
+        </div>
+        <div class="info-card">
+            <h2>Últimas partidas</h2>
+            <div id="accountMatches" class="match-history-list"></div>
+        </div>
+        <div class="info-card">
+            <h2>Carteira</h2>
+            <div id="walletHistory" class="match-history-list"></div>
+        </div>
+    </section>
+</main>
+
+<aside class="chat-panel" id="chatPanel" style="display:none;">
+    <div class="chat-header"><div><strong>Chat da Arena</strong><span>Combine sua próxima partida.</span></div><button onclick="NeonCommon.fecharChat()">Fechar</button></div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <form class="chat-form" onsubmit="NeonCommon.enviarChat(event)"><input id="chatInput" type="text" maxlength="240" placeholder="Digite sua mensagem"><button>Enviar</button></form>
+</aside>
+
+<script src="neon-common.js?v=1.5.2"></script>
+<script>
+    window.addEventListener("neon:profile", (event) => {
+        const dados = event.detail;
+        const stats = dados.stats || {};
+        document.getElementById("histPartidas").innerText = stats.partidas || 0;
+        document.getElementById("histVitorias").innerText = stats.vitorias || 0;
+        document.getElementById("histAproveitamento").innerText = (stats.aproveitamento || 0) + "%";
+
+        const partidas = dados.partidas || [];
+        document.getElementById("accountMatches").innerHTML = partidas.length ? partidas.map((partida) => `
+            <div class="history-row">
+                <strong>${partida.player_name} ${partida.score_player} x ${partida.score_opponent} ${partida.opponent_name}</strong>
+                <span>Vencedor: ${partida.winner_name}</span>
+                <small>${partida.played_at}</small>
+            </div>
+        `).join("") : "<p class='empty-history'>Nenhuma partida salva ainda.</p>";
+
+        const transacoes = dados.wallet?.transacoes || [];
+        document.getElementById("walletHistory").innerHTML = transacoes.length ? transacoes.slice(0, 10).map((item) => `
+            <div class="history-row">
+                <strong>${item.amount > 0 ? "+" : ""}${item.amount} Moedas Neon</strong>
+                <span>${item.description}</span>
+                <small>Saldo: ${item.balance_after} | ${item.created_at}</small>
+            </div>
+        `).join("") : "<p class='empty-history'>Nenhuma movimentação ainda.</p>";
+    });
+
+    NeonCommon.init();
+</script>
+</body>
+</html>
