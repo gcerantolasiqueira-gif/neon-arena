@@ -8,6 +8,7 @@ const PLAYER_RADIUS = 34;
 const PUCK_RADIUS = 19;
 const PLAYER_SPEED = 8.5;
 const ONLINE_PREDICTION_SPEED = 10.2;
+const ONLINE_INPUT_GRACE_MS = 260;
 const FRICTION = 0.996;
 const HIT_POWER = 14;
 const MAX_PUCK_SPEED = 24;
@@ -55,6 +56,7 @@ let matchUidAtual = "";
 let intervaloInputOnline = null;
 let ultimoInputOnline = "";
 let ultimoEnvioInputOnline = 0;
+let ultimaMovimentacaoOnline = 0;
 
 const sounds = {
     hit: new Audio("sounds/hit.wav"),
@@ -290,6 +292,7 @@ document.addEventListener("keydown", function(event) {
     if (event.key in keys) {
         iniciarMusica();
         keys[event.key] = true;
+        ultimaMovimentacaoOnline = performance.now();
         enviarInputOnline();
     }
 });
@@ -297,6 +300,7 @@ document.addEventListener("keydown", function(event) {
 document.addEventListener("keyup", function(event) {
     if (event.key in keys) {
         keys[event.key] = false;
+        ultimaMovimentacaoOnline = performance.now();
         enviarInputOnline();
     }
 });
@@ -726,9 +730,28 @@ function enviarResetOnline() {
 
 function aplicarEstadoOnline(game, room) {
     const estavaFinalizado = gameOver;
+    const jogadorLocal = jogadorOnline === 1 ? p1 : p2;
+    const estadoLocalAnterior = {
+        x: jogadorLocal.x,
+        y: jogadorLocal.y,
+        lastX: jogadorLocal.lastX,
+        lastY: jogadorLocal.lastY
+    };
+    const movimento = obterMovimentoCompartilhado();
+    const manterPredicaoLocal = movimento.x !== 0 || movimento.y !== 0 ||
+        performance.now() - ultimaMovimentacaoOnline < ONLINE_INPUT_GRACE_MS;
 
     p1 = { ...game.p1, color: "#ff416d" };
     p2 = { ...game.p2, color: "#00eaff" };
+
+    if (manterPredicaoLocal) {
+        const meuDisco = jogadorOnline === 1 ? p1 : p2;
+        meuDisco.x = estadoLocalAnterior.x;
+        meuDisco.y = estadoLocalAnterior.y;
+        meuDisco.lastX = estadoLocalAnterior.lastX;
+        meuDisco.lastY = estadoLocalAnterior.lastY;
+    }
+
     puck.x = game.puck.x;
     puck.y = game.puck.y;
     puck.vx = game.puck.vx;
