@@ -8,8 +8,6 @@ const PLAYER_RADIUS = 34;
 const PUCK_RADIUS = 19;
 const PLAYER_SPEED = 8.5;
 const ONLINE_PREDICTION_SPEED = 10.2;
-const ONLINE_REMOTE_SMOOTHING = 0.28;
-const ONLINE_TELEPORT_DISTANCE = 160;
 const FRICTION = 0.996;
 const HIT_POWER = 14;
 const MAX_PUCK_SPEED = 24;
@@ -57,8 +55,6 @@ let matchUidAtual = "";
 let intervaloInputOnline = null;
 let ultimoInputOnline = "";
 let ultimoEnvioInputOnline = 0;
-let alvoOnlineP1 = null;
-let alvoOnlineP2 = null;
 
 const sounds = {
     hit: new Audio("sounds/hit.wav"),
@@ -310,7 +306,6 @@ document.addEventListener("pointerdown", iniciarMusica);
 function moverJogadores() {
     if (isOnline) {
         moverJogadorOnlinePrevisto();
-        suavizarJogadorOnlineRemoto();
         return;
     }
 
@@ -337,27 +332,6 @@ function moverJogadores() {
 
     limitarJogador(p1, "left");
     limitarJogador(p2, "right");
-}
-
-function suavizarJogadorOnlineRemoto() {
-    const alvo = jogadorOnline === 1 ? alvoOnlineP2 : alvoOnlineP1;
-    const player = jogadorOnline === 1 ? p2 : p1;
-
-    if (!alvo) return;
-
-    const distancia = Math.hypot(alvo.x - player.x, alvo.y - player.y);
-    if (distancia > ONLINE_TELEPORT_DISTANCE) {
-        player.x = alvo.x;
-        player.y = alvo.y;
-        player.lastX = alvo.lastX ?? alvo.x;
-        player.lastY = alvo.lastY ?? alvo.y;
-        return;
-    }
-
-    player.lastX = player.x;
-    player.lastY = player.y;
-    player.x += (alvo.x - player.x) * ONLINE_REMOTE_SMOOTHING;
-    player.y += (alvo.y - player.y) * ONLINE_REMOTE_SMOOTHING;
 }
 
 function moverJogadorOnlinePrevisto() {
@@ -753,7 +727,8 @@ function enviarResetOnline() {
 function aplicarEstadoOnline(game, room) {
     const estavaFinalizado = gameOver;
 
-    atualizarJogadoresOnline(game);
+    p1 = { ...game.p1, color: "#ff416d" };
+    p2 = { ...game.p2, color: "#00eaff" };
     puck.x = game.puck.x;
     puck.y = game.puck.y;
     puck.vx = game.puck.vx;
@@ -803,40 +778,6 @@ function aplicarEstadoOnline(game, room) {
 
     if (gameOver && !estavaFinalizado) {
         salvarHistoricoPartida();
-    }
-}
-
-function atualizarJogadoresOnline(game) {
-    const estadoP1 = { ...game.p1, color: "#ff416d" };
-    const estadoP2 = { ...game.p2, color: "#00eaff" };
-
-    if (!alvoOnlineP1 || !alvoOnlineP2) {
-        p1 = estadoP1;
-        p2 = estadoP2;
-        alvoOnlineP1 = { ...estadoP1 };
-        alvoOnlineP2 = { ...estadoP2 };
-        return;
-    }
-
-    alvoOnlineP1 = estadoP1;
-    alvoOnlineP2 = estadoP2;
-
-    const estadoLocal = jogadorOnline === 1 ? estadoP1 : estadoP2;
-    const jogadorLocal = jogadorOnline === 1 ? p1 : p2;
-    const movimento = obterMovimentoCompartilhado();
-
-    // A predicao local evita saltos visiveis enquanto a tecla esta pressionada.
-    if (movimento.x === 0 && movimento.y === 0) {
-        const distancia = Math.hypot(estadoLocal.x - jogadorLocal.x, estadoLocal.y - jogadorLocal.y);
-        if (distancia > ONLINE_TELEPORT_DISTANCE) {
-            jogadorLocal.x = estadoLocal.x;
-            jogadorLocal.y = estadoLocal.y;
-            jogadorLocal.lastX = estadoLocal.lastX;
-            jogadorLocal.lastY = estadoLocal.lastY;
-        } else {
-            jogadorLocal.x += (estadoLocal.x - jogadorLocal.x) * 0.18;
-            jogadorLocal.y += (estadoLocal.y - jogadorLocal.y) * 0.18;
-        }
     }
 }
 
